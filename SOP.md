@@ -1,6 +1,6 @@
 # skaegis - Standard Operating Procedures
 
-skAegis is a sovereign, self-hosted CVE-detection and closed-loop remediation service built on unmodified upstream Wazuh (GPLv2). It is deployed by the SKStacks `optional/skaegis` role and is called by admins through the Wazuh dashboard behind sksso OIDC, and by the remediation pipeline through finding hand-off. This repo is its documentation and spec home.
+skaegis is a sovereign, self-hosted CVE-detection and closed-loop remediation service built on unmodified upstream Wazuh (GPLv3). It is deployed by the SKStacks `optional/skaegis` role and is called by admins through the Wazuh dashboard behind sksso OIDC, and by the remediation pipeline through finding hand-off. This repo is its documentation and spec home.
 
 **Status:** active (scaffold) · **Maturity-tier:** T0 - N/A · **Version:** 0.1.0 · **Canonical-home:** https://github.com/smilinTux/skaegis
 
@@ -90,7 +90,7 @@ flowchart LR
 sequenceDiagram
   autonumber
   participant Feed as CVE feeds
-  participant Mgr as skAegis manager
+  participant Mgr as skaegis manager
   participant Tri as Triage (local LLM)
   participant Pipe as Remediation pipeline
   participant Host as Host or image
@@ -185,10 +185,10 @@ This repo exposes no API. Operators use the upstream Wazuh dashboard and the ups
 
 ## 9. Maturity-tier + Version reference
 
-- **Maturity-tier:** T0 - N/A. skAegis holds no key material of its own. It is not a crypto component, so no CRYPTOGRAPHY_STANDARD suite claim is made. Transport and auth are upstream Wazuh, Traefik and sksso.
+- **Maturity-tier:** T0 - N/A. skaegis holds no key material of its own. It is not a crypto component, so no CRYPTOGRAPHY_STANDARD suite claim is made. Transport and auth are upstream Wazuh, Traefik and sksso.
 - **Version phase:** Incubating v3 (per [VERSION_LIFECYCLE](https://github.com/smilinTux/sk-standards/blob/main/standards/VERSION_LIFECYCLE.md)).
 - **SemVer:** 0.1.0 (scaffold). See [CHANGELOG.md](./CHANGELOG.md).
-- **License:** GPL-2.0-only, matching upstream Wazuh.
+- **License:** GPLv3, matching upstream Wazuh.
 
 <!-- docs-evidence
      Executed by the docs-check gate (DOCS_FRESHNESS_STANDARD 1.3).
@@ -203,6 +203,6 @@ checks:
     run: grep -q 'wazuh-indexer' SOP.md && grep -q 'wazuh-manager' SOP.md && grep -q 'wazuh-dashboard' SOP.md
   - name: closed-loop doc present
     run: test -f docs/closed-loop.md && test -f docs/design.md
-  - name: license is GPLv2
+  - name: license is GPLv3
     run: grep -q 'GNU GENERAL PUBLIC LICENSE' LICENSE && grep -q 'Version 2' LICENSE
 -->

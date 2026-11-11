@@ -1,4 +1,4 @@
-# skAegis design
+# skaegis design
 
 **Status:** active, scaffold phase. Nothing is deployed from this repo. The deploy role is tracked in SKStacks as `optional/skaegis`. This is the cleaned-up Phase 1 design, the source of truth for product content. See [README.md](../README.md) and [SOP.md](../SOP.md).
 
@@ -6,7 +6,7 @@
 
 A fleet already running a GitOps remediation loop (image and dependency bumps through Renovate and an SBOM scanner, Linux host upgrades through skpatch-hosts) is missing one organ: fleet-wide, cross-OS vulnerability **detection**, the radar that sees every CVE the moment it lands on every host regardless of OS. That is Wazuh, which the architecture already names in its DETECT layer.
 
-skAegis is the product wrapper around it: a self-hosted, SSO'd, portal-tiled service that detects CVEs and misconfigurations on Linux, Windows and macOS hosts and feeds findings into the remediation loop that already exists (Renovate plus SBOM for images, skpatch-hosts for Linux packages, scheduled jobs for Windows and macOS).
+skaegis is the product wrapper around it: a self-hosted, SSO'd, portal-tiled service that detects CVEs and misconfigurations on Linux, Windows and macOS hosts and feeds findings into the remediation loop that already exists (Renovate plus SBOM for images, skpatch-hosts for Linux packages, scheduled jobs for Windows and macOS).
 
 Not adopted: FleetDM and Tactical RMM. They are endpoint-management agent models orthogonal to a GitOps loop, and Tactical largely re-wraps the remote-management agent already in place. FleetDM remains a Phase 4, only-if option for formal Apple and Windows MDM enforcement.
 
@@ -14,7 +14,7 @@ Not adopted: FleetDM and Tactical RMM. They are endpoint-management agent models
 
 | Name | Reads as | Suite fit | Note |
 |---|---|---|---|
-| **skAegis** (chosen) | Shield, protection incarnate | sksec, skpatch, skAegis | Premium tone, no vulnerability-management product collision. |
+| **skaegis** (chosen) | Shield, protection incarnate | sksec, skpatch, skaegis | Premium tone, no vulnerability-management product collision. |
 | skArgus | The all-seeing | Detection-forward identity | Considered, emphasises visibility. |
 | skBastion | Fortified strongpoint | Fortress feel | Considered, more infrastructure-sounding. |
 
@@ -22,18 +22,18 @@ Tagline: *"Your continuous shield: every CVE seen, every gap closed."*
 
 ## 2. What it is
 
-> skAegis is continuous vulnerability intelligence for your whole fleet. It watches every machine you run (Linux servers, Windows laptops, Macs) and, when a new CVE is published against something you have installed, it tells you, ranks it by exploitability and exposure, and hands the fix to your patch pipeline. Detection to remediation, closed loop, on your own infrastructure. No cloud SaaS, no data leaving your walls.
+> skaegis is continuous vulnerability intelligence for your whole fleet. It watches every machine you run (Linux servers, Windows laptops, Macs) and, when a new CVE is published against something you have installed, it tells you, ranks it by exploitability and exposure, and hands the fix to your patch pipeline. Detection to remediation, closed loop, on your own infrastructure. No cloud SaaS, no data leaving your walls.
 
 Honest scope: it reports **known, published** CVEs and posture gaps. It is a detection and remediation-orchestration service built on upstream Wazuh. It does not find zero-days and does not patch anything itself.
 
-Suite framing: **Defend (sksec), Detect (skAegis), Remediate (skpatch).**
+Suite framing: **Defend (sksec), Detect (skaegis), Remediate (skpatch).**
 
 ## 3. Where it fits
 
 ```mermaid
 flowchart TB
   subgraph DETECT["DETECT"]
-    AEG[skAegis: Wazuh vuln detector, CIS/SCA, FIM, rootcheck<br/>Linux, Windows, macOS hosts]
+    AEG[skaegis: Wazuh vuln detector, CIS/SCA, FIM, rootcheck<br/>Linux, Windows, macOS hosts]
     IMG[CI scan + SBOM<br/>container images and dependencies]
   end
   AEG -->|findings: CVE id, host, package, severity, fix-available| TRI
@@ -46,13 +46,13 @@ flowchart TB
   VER -->|still present| AEG
 ```
 
-skAegis is the DETECT organ for **hosts**. The existing CI scan plus SBOM are DETECT for **images**. Same loop, two sensory inputs.
+skaegis is the DETECT organ for **hosts**. The existing CI scan plus SBOM are DETECT for **images**. Same loop, two sensory inputs.
 
 ## 4. Architecture (role shape)
 
 Opt-in `optional/skaegis` role. Nothing renders unless an instance runs `deploy_skaegis-<env>.yml`.
 
-**Upstream and license.** Wazuh is GPLv2, fully self-hostable, with official multi-arch images. skAegis runs unmodified upstream images pinned by `@sha256:` (the play refuses an unpinned image).
+**Upstream and license.** Wazuh is GPLv3, fully self-hostable, with official multi-arch images. skaegis runs unmodified upstream images pinned by `@sha256:` (the play refuses an unpinned image).
 
 | Service | Image | Replicas | Role |
 |---|---|---|---|
@@ -103,11 +103,11 @@ Delivery flow: branch, PR, deploy, with review before anything merges.
 2. **Scope of first enrolment:** all Linux servers at once, or servers first and then laptops and Windows.
 3. **Marketing depth now:** draft the website and tier copy in this pass or after the tech ships.
 
-(The name decision in section 1 is closed: skAegis.)
+(The name decision in section 1 is closed: skaegis.)
 
 ## 10. Marketing and white-label notes
 
-- Suite framing: **Defend (sksec), Detect (skAegis), Remediate (skpatch).**
+- Suite framing: **Defend (sksec), Detect (skaegis), Remediate (skpatch).**
 - Hero claim: *"Every CVE, every host, every OS, found when it is published against what you run and closed on your own infrastructure. No SaaS. No data leaves your walls."* Read it as scoped to known, published CVEs.
 - Tiers (sketch): **Watch** (detection and dashboard), **Guard** (plus closed-loop auto-PR remediation), **Fortress** (plus runtime threat detection, active response, compliance and CIS reporting, audit export).
 - White-label: single-tenant, your domain, your SSO, your branding.

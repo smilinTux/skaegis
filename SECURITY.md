@@ -26,9 +26,9 @@ skaegis is a documentation and spec repo for a detection and remediation-orchest
 
 ## Dependency posture
 
-- The only runtime dependency is upstream Wazuh (GPLv2), run unmodified. Updates are a deliberate digest bump reviewed through a PR.
+- The only runtime dependency is upstream Wazuh (GPLv3), run unmodified. Updates are a deliberate digest bump reviewed through a PR.
 - skaegis detects **known, published** CVEs. It does not find zero-days and does not make a host secure by itself.
 
 ## Compliance line
 
-Maturity tier T0 - N/A. No CRYPTOGRAPHY_STANDARD suite claim is made because skAegis implements no cryptography of its own.
+Maturity tier T0 - N/A. No CRYPTOGRAPHY_STANDARD suite claim is made because skaegis implements no cryptography of its own.

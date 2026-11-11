@@ -1,16 +1,16 @@
-# skAegis closed-loop wiring
+# skaegis closed-loop wiring
 
-How a CVE actually gets closed. Companion to [design.md](./design.md) and [SOP.md](../SOP.md). The loop is the same shape as the sksec closed-loop; skAegis supplies the host-side DETECT input.
+How a CVE actually gets closed. Companion to [design.md](./design.md) and [SOP.md](../SOP.md). The loop is the same shape as the sksec closed-loop; skaegis supplies the host-side DETECT input.
 
 ## Stages
 
 | Stage | Owner | Input | Output |
 |---|---|---|---|
-| Detect | skAegis manager (Wazuh vulnerability detector) | Host package inventory plus public CVE feeds (NVD, GHSA, OSV, vendor) | Finding: `CVE id, host, package, severity, fix-available` |
+| Detect | skaegis manager (Wazuh vulnerability detector) | Host package inventory plus public CVE feeds (NVD, GHSA, OSV, vendor) | Finding: `CVE id, host, package, severity, fix-available` |
 | Triage | Local LLM through skgateway (`http://localhost:18780/v1`, model `sk-default`) | Finding plus exposure context | Ranked finding, gate-policy decision |
 | Route | Loop policy | Ranked finding, package kind | Image loop, Linux host lane, or Windows/macOS job |
 | Remediate | skpatch, Renovate, scheduled OS update jobs | Routed finding | A fix applied or a PR opened |
-| Verify | skAegis re-scan plus health monitoring | Next inventory scan | CVE absent and services healthy, or back to Detect |
+| Verify | skaegis re-scan plus health monitoring | Next inventory scan | CVE absent and services healthy, or back to Detect |
 | Close | ITIL change | Verify result | Change closed |
 
 ## Flow
@@ -24,7 +24,7 @@ flowchart TD
   D2 --> D3[CAB merge, then deploy]
   C -->|Linux host OS package| E[skpatch-hosts nightly upgrade<br/>or same-day lane for CRITICAL]
   C -->|Windows or macOS package| F[Scheduled winget, Windows Update or softwareupdate job<br/>via the remote-management agent]
-  D3 --> G[skAegis re-scan]
+  D3 --> G[skaegis re-scan]
   E --> G
   F --> G
   G --> H{CVE gone and health green?}
@@ -37,7 +37,7 @@ flowchart TD
 ```mermaid
 sequenceDiagram
   autonumber
-  participant M as skAegis manager
+  participant M as skaegis manager
   participant T as Triage
   participant I as ITIL (change, CAB)
   participant P as Pipeline

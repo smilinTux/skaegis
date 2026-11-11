@@ -1,8 +1,8 @@
 # Contributing to skaegis
 
-Thanks for helping. This repo is the documentation and spec home for skAegis. The deploy role itself lives in the SKStacks repo as `optional/skaegis`; changes to Ansible, compose or defaults belong there.
+Thanks for helping. This repo is the documentation and spec home for skaegis. The deploy role itself lives in the SKStacks repo as `optional/skaegis`; changes to Ansible, compose or defaults belong there.
 
-By participating you agree to the [Code of Conduct](./CODE_OF_CONDUCT.md). Contributions are licensed GPL-2.0-only, matching [LICENSE](./LICENSE) and upstream Wazuh.
+By participating you agree to the [Code of Conduct](./CODE_OF_CONDUCT.md). Contributions are licensed GPLv3, matching [LICENSE](./LICENSE) and upstream Wazuh.
 
 ## Branch model
 
@@ -25,7 +25,7 @@ grep -rnP '\x{2014}|\x{2013}' --include='*.md' --exclude=LICENSE .   # must prin
 
 ## Rules for content
 
-1. **No claim without evidence.** Never write "quantum-proof", "unhackable" or "complete coverage". skAegis detects known, published CVEs on top of upstream Wazuh.
+1. **No claim without evidence.** Never write "quantum-proof", "unhackable" or "complete coverage". skaegis detects known, published CVEs on top of upstream Wazuh.
 2. **One canonical source.** State a fact once and link to it.
 3. **Diagrams are mermaid** and updated in the same PR as the behavior they describe.
 4. **No private data.** No host names, IPs, estate names, credentials or real findings. Use `<domain>` and `<env>` placeholders.

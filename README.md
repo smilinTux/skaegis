@@ -1,6 +1,6 @@
 # skaegis 🛡️
 
-**skAegis is a sovereign, self-hosted, cross-OS CVE-detection and closed-loop remediation service: it finds known vulnerabilities on every Linux, Windows and macOS host you run and hands each finding to your existing patch pipeline.** It is a detection plus remediation-orchestration service built on unmodified upstream [Wazuh](https://wazuh.com/); it is not a new scanner engine and not a SaaS.
+**skaegis is a sovereign, self-hosted, cross-OS CVE-detection and closed-loop remediation service: it finds known vulnerabilities on every Linux, Windows and macOS host you run and hands each finding to your existing patch pipeline.** It is a detection plus remediation-orchestration service built on unmodified upstream [Wazuh](https://wazuh.com/); it is not a new scanner engine and not a SaaS.
 
 **Status:** active (design and scaffold phase, nothing deployed from this repo) · **Maturity tier:** T0 - N/A, no key material of its own (per [CRYPTOGRAPHY_STANDARD](https://github.com/smilinTux/sk-standards/blob/main/standards/CRYPTOGRAPHY_STANDARD.md)) · **Version phase:** Incubating v3 (see [SOP section 9](./SOP.md#9-maturity-tier--version-reference)) · **Version:** 0.1.0
 **Canonical-home:** https://github.com/smilinTux/skaegis
@@ -10,10 +10,10 @@
 | Product | Verb | What it does |
 |---|---|---|
 | **sksec** | Defend | Runtime defense (CrowdSec, NIDS), the closed-loop policy and gate. |
-| **skAegis** (this repo) | Detect | Continuous CVE and posture detection across Linux, Windows, macOS. |
+| **skaegis** (this repo) | Detect | Continuous CVE and posture detection across Linux, Windows, macOS. |
 | **skpatch** | Remediate | Applies the fix: host packages, image and dependency bumps. |
 
-Three words, one story: defend, detect, remediate. skAegis is the DETECT organ for hosts. Image scanning (CI scan plus SBOM) is the DETECT organ for container images. Same loop, two sensory inputs.
+Three words, one story: defend, detect, remediate. skaegis is the DETECT organ for hosts. Image scanning (CI scan plus SBOM) is the DETECT organ for container images. Same loop, two sensory inputs.
 
 ## Where the code lives
 
@@ -28,7 +28,7 @@ flowchart LR
     W[Windows agents]
     M[macOS agents]
   end
-  subgraph Aegis["skAegis (SKStacks optional/skaegis)"]
+  subgraph Aegis["skaegis (SKStacks optional/skaegis)"]
     MGR[wazuh-manager<br/>vuln detector + rules]
     IDX[(wazuh-indexer<br/>OpenSearch)]
     DASH[wazuh-dashboard]
@@ -59,12 +59,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  D[Detect<br/>skAegis flags CVE on host H, package P] --> T[Triage<br/>rank exploitability x exposure, apply gate policy]
+  D[Detect<br/>skaegis flags CVE on host H, package P] --> T[Triage<br/>rank exploitability x exposure, apply gate policy]
   T --> R{Kind of package?}
   R -->|container image or dependency| I[Image loop<br/>Renovate bump PR, CI re-scan, CAB merge, deploy]
   R -->|Linux host package| LP[skpatch-hosts<br/>nightly upgrade or same-day lane]
   R -->|Windows or macOS package| WP[Scheduled winget, Windows Update, softwareupdate job]
-  I --> V[Verify<br/>skAegis re-scan shows CVE gone, health checks green]
+  I --> V[Verify<br/>skaegis re-scan shows CVE gone, health checks green]
   LP --> V
   WP --> V
   V -->|clean| C[Close the ITIL change]
@@ -85,9 +85,9 @@ These are a product sketch from [docs/design.md](./docs/design.md), not shipped 
 
 ## Honest claims (read this)
 
-- skAegis is a **detection and remediation-orchestration service built on upstream Wazuh**. Detection quality is Wazuh's vulnerability detector matched against public feeds. We do not write scanner logic.
+- skaegis is a **detection and remediation-orchestration service built on upstream Wazuh**. Detection quality is Wazuh's vulnerability detector matched against public feeds. We do not write scanner logic.
 - Detection reports **known, published** CVEs against installed software. It does not find zero-days, and a clean dashboard is not proof of a secure host.
-- The remediation half depends on the pipelines you already run. skAegis hands findings over; it does not patch by itself.
+- The remediation half depends on the pipelines you already run. skaegis hands findings over; it does not patch by itself.
 - **No crypto of our own.** The role holds no key material beyond ordinary service secrets (OIDC client secret, indexer credentials) kept in the per-instance vault, so the maturity tier is T0 - N/A. Transport security is whatever upstream Wazuh and Traefik provide.
 - Nothing here is deployed by merging this repo. The scaffold is docs and spec; the deploy role is tracked in SKStacks.
 
@@ -103,10 +103,10 @@ These are a product sketch from [docs/design.md](./docs/design.md), not shipped 
 
 - ⬆️ **Depends on:** [Wazuh](https://github.com/wazuh/wazuh) - upstream manager, indexer, dashboard and agents, run unmodified and pinned by digest.
 - ⬆️ **Depends on:** [SKStacks](https://github.com/smilinTux/SKStacks) - hosts the `optional/skaegis` deploy role (Swarm, Traefik, vault, sksso OIDC).
-- ↔️ **Sibling:** [skpatch](https://github.com/smilinTux/skpatch) - the Remediate half of the suite; applies the fixes skAegis finds.
+- ↔️ **Sibling:** [skpatch](https://github.com/smilinTux/skpatch) - the Remediate half of the suite; applies the fixes skaegis finds.
 - ↔️ **Sibling:** [sksec](https://github.com/smilinTux/sksec) - the Defend half and home of the closed-loop policy.
 - 📐 **Standards:** [sk-standards](https://github.com/smilinTux/sk-standards) - doc, agent-instruction and architecture standards this repo follows.
 
 ## License
 
-GPL-2.0-only, see [LICENSE](./LICENSE). The deploy role runs **unmodified upstream Wazuh**, which is itself GPLv2; this repo is licensed to match so there is no license mismatch between the docs/spec home and what it deploys. This is a recorded exception to the Apache-2.0 default in the doc standard.
+GPLv3, see [LICENSE](./LICENSE). The deploy role runs **unmodified upstream Wazuh**, which is itself GPLv3; this repo is licensed to match so there is no license mismatch between the docs/spec home and what it deploys. This is a recorded exception to the Apache-2.0 default in the doc standard.
